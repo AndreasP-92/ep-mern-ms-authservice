@@ -3,7 +3,7 @@
 const swaggerDefinition = {
     openapi: "3.0.0",
     info: {
-        title: "OpenAPI Example API",
+        title: "OpenAPI - API",
         version: "1.0.0",
         description: "A simple Express API that utilizes OpenAPI",
     },

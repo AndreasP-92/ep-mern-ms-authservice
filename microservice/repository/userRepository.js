@@ -95,6 +95,30 @@ export default {
             }
         }
     },
+    getAllUsersSoft: async () => {
+        try {
+            const data = await User.findAll({
+                paranoid: false,
+                include: {
+                    model: UserRoles,
+                    attributes: ['role']
+                }
+            });
+
+            return {
+                success: true,
+                object: data
+            }
+        }
+        catch (error) {
+            return {
+                success: false,
+                object: {},
+                msg: "OOPS, something went wrong in getAllUsers" + error,
+                status: 405
+            }
+        }
+    },
     updateUser: async (body, userId) => {
         try {
             const data = await User.update(body, {where : {id : userId} });

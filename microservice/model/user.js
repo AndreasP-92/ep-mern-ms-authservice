@@ -38,10 +38,17 @@ export default (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false
       },
+      deletedAt: {
+        type: Sequelize.DATE,
+        allowNull: true,
+        defaultValue: null
+      },
       login_time:{
         type: Sequelize.DATE,
         allowNull: true
       }
+    },{
+      paranoid: true
     });
 
     const UserRoles = userRolesModel(sequelize, Sequelize);
