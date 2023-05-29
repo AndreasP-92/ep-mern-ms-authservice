@@ -45,22 +45,22 @@ const createUser = async function (req, res) {
                 uuid : userCreated.object.token
             })
         }
+        // Out commented untill the email service is online
 
-        let result = await fetch(mailServiceUrl, header);
-        let data = await result.json();
+        // let result = await fetch(mailServiceUrl, header);
+        // let data = await result.json();
 
-        // IF ERROR - Initiate rollback
-        if (data.status != 200) {
-            // Out commented untill the email service is online
-            // await userCollection.deleteUser(userCreated.object.id);
+        // // IF ERROR - Initiate rollback
+        // if (data.status != 200) {
+        //     await userCollection.deleteUser(userCreated.object.id);
             
-            // 205 - Reset content
-            throw new CustomError("failed to send the validation email email, rollback initiated", { 
-                success : false,
-                msg: "OOPS, something went wrong trying to send verification email", data,
-                status : 205 
-            });
-          }
+        //     // 205 - Reset content
+        //     throw new CustomError("failed to send the validation email email, rollback initiated", { 
+        //         success : false,
+        //         msg: "OOPS, something went wrong trying to send verification email", data,
+        //         status : 205 
+        //     });
+        //   }
 
         // STEP THREE - Final response
         res.status(200).json(userCreated);
