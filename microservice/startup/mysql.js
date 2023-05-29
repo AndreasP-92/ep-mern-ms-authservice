@@ -11,7 +11,7 @@ let mysqlUser = process.env.ENVIRONMENT == "dev" ? process.env.DEV_MYSQL_USER : 
 let mysqlPass = process.env.ENVIRONMENT == "dev" ? process.env.DEV_MYSQL_PASS : process.env.MYSQL_PASS;
 let MySQLDB = process.env.ENVIRONMENT == "dev" ? process.env.DEV_MYSQL_DB : process.env.MYSQL_DB;
 
-console.log(MySQLDB)
+console.log(mysqlHost)
 
 let sequelize = new Sequelize(MySQLDB, mysqlUser, mysqlPass, {
     host: mysqlHost,

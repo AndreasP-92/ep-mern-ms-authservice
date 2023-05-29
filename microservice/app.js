@@ -16,7 +16,8 @@ app.use(router)
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerJsdoc(swagger.options)));
 
+let mysqlHost = process.env.ENVIRONMENT == "dev" ? process.env.DEV_MYSQL_HOST : process.env.MYSQL_HOST;
 
 app.listen(port, () =>
-  console.log(`Listening on port ${port}, running on ${process.env.ENVIRONMENT}...`)
+  console.log(`Listening on port ${port} && running on ${process.env.ENVIRONMENT} && connected to DB: ${mysqlHost}...`)
 );

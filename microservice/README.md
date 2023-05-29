@@ -1,5 +1,11 @@
 # Envrionments:
 
+MYSQL_HOST= ep-db-server-v2.mysql.database.azure.com
+MYSQL_PORT= 3306
+MYSQL_USER= epadmin
+MYSQL_PASS= !!1234Ad
+MYSQL_DB= ep_db
+
 MYSQL_HOST = localhost
 MYSQL_PORT = 3306
 MYSQL_USER = <Your user here>
