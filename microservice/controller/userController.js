@@ -3,26 +3,42 @@ import userCollection from '../repository/userRepository.js'
 import { DATE } from 'sequelize';
 
 
+class CustomError extends Error {
+    constructor(message, customData) {
+      super(message);
+      this.name = message;
+      this.customData = customData;
+      Error.captureStackTrace(this, this.constructor);
+    }
+  }
+
 const createUser = async function (req, res) {
+    const mailServiceUrl = process.env.ENVIRONMENT == "prod" ? "<INSERT MAIL SERVICE PROD LINK HERE>" : "http://127.0.0.1:7071/api/HttpExample?requesttype=validate";
     let body = req.body;
-    console.log("hallo??")
+
     if (!("userRole" in req.body)) {
         body.userRole = 'customer';
     }
     if(!("isActive" in req.body)) {
         body.isActive = false;
     }
-    const mailServiceUrl = process.env.ENVIRONMENT == "prod" ? "http://127.0.0.1:7071/api/HttpExample?requesttype=validate" : "http://127.0.0.1:7071/api/HttpExample?requesttype=validate";
-    console.log(body)
 
-    let userCreated = await userCollection.createUser(body)
+    // ======= SAGA PATTERN ========
+    try {
 
-    // Send validation email
-    if(userCreated.success){
+        // STEP ONE - Creating user
+        let userCreated = await userCollection.createUser(body)
+        
+        if(!userCreated.success){
+            // console.log(userCreated)
+            throw new CustomError("something went wrong while trying to create user",userCreated)
+        }
+
+        // STEP TWO - Send validation email
         const header = {
             "method" : "POST",
             "body" : JSON.stringify({
-                websiteUrl : process.env.ENVIRONMENT == "prod" ? "asdasd" : "http://localhost:3000/activate/",
+                websiteUrl : process.env.ENVIRONMENT == "prod" ? "<INSERT CLIENT PROD LINK HERE>" : "http://localhost:3000/activate/",
                 firstname : userCreated.object.firstname,
                 lastname : userCreated.object.lastname,
                 mail : userCreated.object.email,
@@ -30,28 +46,36 @@ const createUser = async function (req, res) {
             })
         }
 
-        try{
-            await fetch(mailServiceUrl, header);
-        }catch(e){
-            // 406 - Not Acceptable
-            userCreated = {
+        let result = await fetch(mailServiceUrl, header);
+        let data = await result.json();
+
+        // IF ERROR - Initiate rollback
+        if (data.status != 200) {
+            await userCollection.deleteUser(userCreated.object.id);
+            
+            // 205 - Reset content
+            throw new CustomError("failed to send the validation email email, rollback initiated", { 
                 success : false,
-                msg: "OOPS, something went wrong trying to send verification email", e,
-                status : 406
-            }
-        }
+                msg: "OOPS, something went wrong trying to send verification email", data,
+                status : 205 
+            });
+          }
 
+        // STEP THREE - Final response
+        res.status(200).json(userCreated);
+
+    // ERROR HANDLING
+    } catch (error) {
+
+        // 409 - Conflict
+        res.status(409).json(error);
     }
-
-    res.status(200).json(userCreated);
-
 };
 
 const verifyAccount = async function (req,res) {
     const token = req.params.token    
     console.log(token)
     res.status(200).json(await userCollection.verifyUser(token))
-
 }
 
 const getAllUsers = async function (req, res) {

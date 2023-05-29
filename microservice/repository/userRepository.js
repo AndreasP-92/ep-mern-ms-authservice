@@ -10,7 +10,7 @@ export default {
     createUser : async (body)=>{
         const salt = await bcrypt.genSaltSync(10);
         body.password = await bcrypt.hashSync(body.password, salt);
-        console.log("BODYPASSWORD====",body.password)
+        // console.log("BODYPASSWORD====",body.password)
         const user = {
             firstname: body.firstname,
             lastname: body.lastname,
@@ -28,7 +28,7 @@ export default {
             const data = await User.create(user)
 
             const foundUserRole = await UserRoles.findOne({where: {role : body.userRole}});
-            console.log(foundUserRole)
+            // console.log(foundUserRole)
             const foundUser = await User.findByPk(data.id);
             await foundUser.addUserRoles(foundUserRole.id);
             return {
