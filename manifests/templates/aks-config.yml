@@ -21,7 +21,7 @@ spec:
         "beta.kubernetes.io/os": linux
       containers:
       - name: ep-mern-authservice
-        image: azurecontainerlorde.azurecr.io/ep-mern-authservice:${BUILD_TAG}
+        image: azurecontainerlord.azurecr.io/ep-mern-authservice:${BUILD_TAG}
         envFrom: 
         - configMapRef:
             name: auth-config-map
