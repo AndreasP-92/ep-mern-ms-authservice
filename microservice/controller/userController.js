@@ -51,7 +51,8 @@ const createUser = async function (req, res) {
 
         // IF ERROR - Initiate rollback
         if (data.status != 200) {
-            await userCollection.deleteUser(userCreated.object.id);
+            // Out commented untill the email service is online
+            // await userCollection.deleteUser(userCreated.object.id);
             
             // 205 - Reset content
             throw new CustomError("failed to send the validation email email, rollback initiated", { 

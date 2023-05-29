@@ -1,7 +1,7 @@
 DEV_MYSQL_HOST = localhost
 DEV_MYSQL_PORT = 3306
-DEV_MYSQL_USER = root
-DEV_MYSQL_PASS = root
+DEV_MYSQL_USER = <Your user here>
+DEV_MYSQL_PASS = <Your Password here>
 DEV_MYSQL_DB = ep_db
 
 MYSQL_HOST = ep-db-server.mysql.database.azure.com
